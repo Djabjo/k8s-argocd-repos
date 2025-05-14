@@ -1,0 +1,4 @@
+apiVersion: v2
+description: A Helm charts for root-apps
+name: root-apps
+version: 0.0.1
