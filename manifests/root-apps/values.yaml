@@ -2,5 +2,5 @@ spec:
   destination:
     server: https://kubernetes.default.svc
   source:
-    repoURL: https://github.com/Djabjo/k8s_argocd_repos
+    repoURL: https://github.com/Djabjo/k8s-argocd-repos
   project: default
