@@ -8,8 +8,8 @@ server:
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
       nginx.ingress.kubernetes.io/letsencrypt-prodbackend-protocol: "HTTPS" 
     
-    hostname: argocd.test.djabjo.ru
+    hostname: argocd.k8s.djabjo.ru
     tls:
     - hosts:
-      - argocd.test.djabjo.ru
-  host: argocd.test.djabjo.ru
+      - argocd.k8s.djabjo.ru
+  host: argocd.k8s.djabjo.ru
