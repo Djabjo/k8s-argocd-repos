@@ -1,6 +1,3 @@
-
-host: argocd.djabjo.ru
-# destinationServer: https://kubernetes.default.svc
 server:
   ingress:
     annotations:
@@ -9,8 +6,9 @@ server:
       kubernetes.io/tls-acme: 'true'
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-      nginx.ingress.kubernetes.io/letsencrypt-prodbackend-protocol: "HTTPS"
+      nginx.ingress.kubernetes.io/letsencrypt-prodbackend-protocol: "HTTPS" 
     hostname: argocd.djabjo.ru
     tls:
     - hosts:
       - argocd.djabjo.ru
+    host: argocd.djabjo.ru
