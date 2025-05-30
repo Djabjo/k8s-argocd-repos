@@ -1,16 +1,16 @@
 
-host: argocd.test.djabjo
+host: argocd.djabjo.ru
 # destinationServer: https://kubernetes.default.svc
 server:
   ingress:
     annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
       kubernetes.io/ingress.class: "nginx"
+      kubernetes.io/tls-acme: 'true'
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-    ingressClassName: nginx
-    hostname: argocd.test.djabjo
+      nginx.ingress.kubernetes.io/letsencrypt-prodbackend-protocol: "HTTPS"
+    hostname: argocd.djabjo.ru
     tls:
     - hosts:
-      - argocd.test.djabjo
+      - argocd.djabjo.ru
