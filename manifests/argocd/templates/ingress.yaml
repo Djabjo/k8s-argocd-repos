@@ -31,6 +31,6 @@ spec:
       - {{ tpl .name $ }}
         {{- end }}
       {{- end }}
-      secretName: argocd-server-tls-test
-      
+      secretName: argocd-server-tls
+
   {{- end }}
