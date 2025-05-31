@@ -4,4 +4,3 @@ spec:
   source:
     repoURL: https://github.com/Djabjo/k8s-argocd-repos
   project: default
-targetRevision: main

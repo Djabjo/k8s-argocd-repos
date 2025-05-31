@@ -1,5 +1,4 @@
-  ###########
-  ## NOTICE
+## NOTICE
 #
 # Due to the scope and complexity of this chart, all possible values are
 # not documented in this file. Extensive documentation is available.
@@ -57,20 +56,22 @@ global:
 
   ## https://docs.gitlab.com/charts/charts/globals#application-resource
   application:
-    create: true
+    create: false
     links: []
     allowClusterRoles: true
-    
   ## https://docs.gitlab.com/charts/charts/globals#configure-host-settings
-  hosts: 
-    domain: k8s.djabjo.ru
-    externalIP: "" 
+  hosts:
+    domain: k8s.djabjo.ru # Замените на ваш домен
+    hostSuffix:
     https: true
+    externalIP: ""
     ssh:
     gitlab: {}
     minio: {}
     registry: {}
-    tls: {}
+    tls:
+      enabled: true
+      secretName: gitlab-tls
     smartcard: {}
     kas: {}
     pages: {}
@@ -115,63 +116,16 @@ global:
     webservice:
       ingress:
         enabled: true
-        ingressClassName: nginx  # Указываем ваш ingressClass
+        ingressClassName: nginx
         hosts:
-          - gitlab.djabjo.ru  # Домен GitLab
+          - gitlab.k8s.djabjo.ru 
         annotations:
-        # Аннотации для cert-manager
           kubernetes.io/ingress.class: nginx
           nginx.ingress.kubernetes.io/backend-protocol: HTTPS
           nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
-
         tls:
           enabled: true  # Включаем TLS (HTTPS)
           secretName: gitlab-tls 
-
-      replicas: 1
-      minReplicas: 1
-      maxReplicas: 2
-
-
-gitlab:
-  webservice:
-    ingress:
-      enabled: true
-      ingressClassName: nginx
-      hosts:
-        - gitlab.k8s.djabjo.ru
-      tls:
-        enabled: true
-        secretName: gitlab-tls
-      annotations:
-        kubernetes.io/ingress.class: nginx
-        nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-        nginx.ingress.kubernetes.io/force-ssl-redirect: 'true'
-
-    replicas: 1
-    minReplicas: 1
-    maxReplicas: 2
-
-    resources:
-      requests:
-        memory: "2Gi"
-        cpu: "500m"
-
-    toolbox:  # Заменяет старый task-runner
-      enabled: true
-      persistence:
-        enabled: false
-
-    sidekiq:
-      replicas: 1
-      resources:
-        requests:
-          memory: "1Gi"
-          cpu: "300m"
-
-  gitlab-shell:
-    replicas: 1
-
   ## Initial root password for this GitLab installation
   ## Secret created according to https://docs.gitlab.com/charts/installation/secrets#initial-root-password
   ## If allowing shared-secrets generation, this is OPTIONAL.
@@ -220,10 +174,6 @@ gitlab:
   redis:
     auth:
       enabled: true
-    install: true 
-    master:
-      persistence:
-      size: 5Gi
       # secret:
       # key:
     # connectTimeout: 1
@@ -671,7 +621,7 @@ gitlab:
       #   serverCA:
     registry:
       replication:
-        enabled: true
+        enabled: false
         primaryApiUrl:
         ## Consumes global.registry.notificationSecret
 
@@ -875,6 +825,8 @@ gitlab:
       enabled: false
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-webservice
+  webservice:
+    workerTimeout: 60
 
   ## https://docs.gitlab.com/charts/charts/globals#custom-certificate-authorities
   # configuration of certificates container & custom CA injection
@@ -1013,7 +965,7 @@ certmanager-issuer:
 ## Installation of certmananger.
 ## This value replaces `certmanager.install` to allow certmanager schema validation to pass.
 ## See requirements.yaml for current version
-installCertmanager: false
+installCertmanager: true
 
 ## Configuration of jetstack/cert-manager
 certmanager:
@@ -1303,10 +1255,6 @@ redis:
 ## See requirements.yaml for current version
 postgresql:
   install: true
-  persistence:
-    enabled: true
-    size: 10Gi
-    storageClass: standard
   auth:
     ## These need to be set, for the sake of bitnami/postgresql upgrade patterns.
     ## They are overridden by use of `existingSecret`
@@ -1387,3 +1335,94 @@ shared-secrets:
   tolerations: []
   podLabels: {}
   annotations: {}
+
+## Installation & configuration of gitlab/gitlab-runner
+## See requirements.yaml for current version
+gitlab-runner:
+  install: false
+  rbac:
+    create: true
+  runners:
+    locked: false
+    # Set secret to an arbitrary value because the runner chart renders the gitlab-runner.secret template only if it is not empty.
+    # The parent/GitLab chart overrides the template to render the actual secret name.
+    secret: "nonempty"
+    config: |
+      [[runners]]
+        [runners.kubernetes]
+        image = "ubuntu:22.04"
+        {{- if .Values.global.minio.enabled }}
+        [runners.cache]
+          Type = "s3"
+          Path = "gitlab-runner"
+          Shared = true
+          [runners.cache.s3]
+            ServerAddress = {{ include "gitlab-runner.cache-tpl.s3ServerAddress" . }}
+            BucketName = "runner-cache"
+            BucketLocation = "us-east-1"
+            Insecure = false
+        {{ end }}
+  podAnnotations:
+    gitlab.com/prometheus_scrape: "true"
+    gitlab.com/prometheus_port: 9252
+  podSecurityContext:
+    seccompProfile:
+      type: "RuntimeDefault"
+
+traefik:
+  install: false
+  ports:
+    gitlab-shell:
+      expose: true
+      port: 2222
+      exposedPort: 22
+
+## Settings for individual sub-charts under GitLab
+## Note: Many of these settings are configurable via globals
+gitlab:
+  ## https://docs.gitlab.com/charts/charts/gitlab/toolbox
+  toolbox:
+    replicas: 1
+    antiAffinityLabels:
+      matchLabels:
+        app: gitaly
+  webservice:
+    replicas: 1
+    workhorse:
+      tls:
+        enabled: true  
+
+  ## https://docs.gitlab.com/charts/charts/gitlab/migrations
+  #   migrations:
+  #     enabled: false
+  ## https://docs.gitlab.com/charts/charts/gitlab/webservice
+  #   webservice:
+  #     enabled: false
+  ## https://docs.gitlab.com/charts/charts/gitlab/sidekiq
+  #   sidekiq:
+  #     enabled: false
+  ## https://docs.gitlab.com/charts/charts/gitlab/gitaly
+  #   gitaly:
+  ## https://docs.gitlab.com/charts/charts/gitlab/gitlab-shell
+  #   gitlab-shell:
+  #     enabled: false
+  ## https://docs.gitlab.com/charts/charts/gitlab/gitlab-pages
+  #   gitlab-pages:
+  ## https://docs.gitlab.com/charts/charts/gitlab/kas
+  #   kas:
+  ## https://docs.gitlab.com/charts/charts/gitlab/praefect
+  #   praefect:
+
+## Installation & configuration of gitlab/gitlab-zoekt
+gitlab-zoekt:
+  install: false
+  gateway:
+    basicAuth:
+      enabled: true
+      secretName: '{{ include "gitlab.zoekt.gateway.basicAuth.secretName" $ }}'
+  indexer:
+    internalApi:
+      enabled: true
+      secretName: '{{ include "gitlab.zoekt.indexer.internalApi.secretName" $ }}'
+      secretKey: '{{ include "gitlab.zoekt.indexer.internalApi.secretKey" $ }}'
+      gitlabUrl: '{{ include "gitlab.zoekt.indexer.internalApi.gitlabUrl" $ }}'
