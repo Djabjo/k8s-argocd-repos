@@ -1,7 +1,6 @@
 global:
   hosts:
     domain: k8s.djabjo.ru
-    registry: registry.k8s.djabjo.ru
     https: true
     externalIP: ""  # Автоматическое определение
 
