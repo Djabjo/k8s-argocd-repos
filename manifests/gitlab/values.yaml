@@ -1383,8 +1383,40 @@ gitlab:
   #   migrations:
   #     enabled: false
   ## https://docs.gitlab.com/charts/charts/gitlab/webservice
-  #   webservice:
-  #     enabled: false
+  webservice:
+    enabled: true
+    workhorse: {}
+    tls:
+      verify: true
+      caSecretName: gitlab-tls
+      exporter:
+        enabled: true
+        tls:
+          enabled: true
+
+    # Добавляем ваш Ingress конфиг:
+    ingress:
+      enabled: true
+      apiVersion: "networking.k8s.io/v1"
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      ingressClassName: nginx
+      tls:
+        secretName: gitlab-tls  # Измените на ваш секрет
+        hosts:
+          - gitlab.k8s.djabjo.ru  # Ваш домен для GitLab
+      rules:
+        - host: gitlab.k8s.djabjo.ru
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  serviceName: gitlab-webservice-default
+                  servicePort: 443
+
   ## https://docs.gitlab.com/charts/charts/gitlab/sidekiq
   #   sidekiq:
   #     enabled: false
