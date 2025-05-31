@@ -9,36 +9,6 @@ spec:
   destination:
     namespace: gitlab
     server: {{ .Values.spec.destination.server }}
-  project: {{ .Values.spec.project }}
-  source:
-    path: manifests/gitlab
-    repoURL: {{ .Values.spec.source.repoURL }}
-    targetRevision: {{ .Values.targetRevision }}
-    helm:
-      parameters:
-        - name: repoURL
-          value: {{ .Values.spec.source.repoURL}}
-        - name: destinationServer
-          value: {{ .Values.spec.destination.server }}
-  syncPolicy:
-    automated: {}
-    syncOptions:
-      - CreateNamespace=true
-      - ApplyOutOfSyncOnly=true
-
-
-
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: gitlab
-  namespace: gitlab
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  destination:
-    namespace: gitlab
-    server: {{ .Values.spec.destination.server }}
   project: gitlab
   source:
     helm:
