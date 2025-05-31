@@ -31,7 +31,7 @@ global:
     labels:
       app: gitlab
       component: webservice
-      
+
   image: {}
     # Registry value override is only available for the following Charts:
     # - Spamcheck
@@ -65,7 +65,9 @@ global:
     allowClusterRoles: true
   ## https://docs.gitlab.com/charts/charts/globals#configure-host-settings
   hosts:
-    domain: k8s.djabjo.ru # Замените на ваш домен
+    domain: k8s.djabjo.ru 
+    gitlab:
+      name: gitlab.k8s.djabjo.ru
     hostSuffix:
     https: true
     externalIP: ""
@@ -120,6 +122,8 @@ global:
     webservice:
       ingress:
         enabled: true
+        paths:
+          - /
         ingressClassName: nginx
         hosts:
           - gitlab.k8s.djabjo.ru 
