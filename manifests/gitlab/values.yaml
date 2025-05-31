@@ -1,4 +1,9 @@
 global:
+  common:
+      labels:
+        # ваши метки, например:
+        app.kubernetes.io/name: gitlab
+        app.kubernetes.io/instance: gitlab
   application:
     create: true
   hosts:
