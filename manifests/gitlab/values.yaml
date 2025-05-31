@@ -1,15 +1,10 @@
 global:
+  application:
+    create: true
   hosts:
     domain: k8s.djabjo.ru
     https: true
     externalIP: ""  # Автоматическое определение
-
-  ingress:
-    configureCertmanager: true
-    enabled: false
-    tls:
-      enabled: true
-      secretName: gitlab-tls
 
 certmanager:
   install: false  # Предполагаем, что cert-manager уже установлен
