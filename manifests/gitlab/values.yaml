@@ -1,4 +1,6 @@
 global:
+  image:
+    tagSuffix: "-latest" 
   common:
       labels:
         # ваши метки, например:
