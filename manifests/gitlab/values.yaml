@@ -1316,7 +1316,9 @@ redis:
 postgresql:
   install: true
   persistence:
-  size: 10Gi
+    enabled: true
+    size: 10Gi
+    storageClass: standard
   auth:
     ## These need to be set, for the sake of bitnami/postgresql upgrade patterns.
     ## They are overridden by use of `existingSecret`
