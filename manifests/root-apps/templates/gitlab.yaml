@@ -25,3 +25,28 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
+
+
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitlab
+  namespace: gitlab
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: gitlab
+    server: {{ .Values.spec.destination.server }}
+  project: gitlab
+  source:
+    helm:
+      valueFiles:
+        - requirements.yaml
+    path: manifests/gitlab
+    repoURL: {{ .Values.spec.source.repoURL }}
+    targetRevision: {{ .Values.targetRevision }}
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
