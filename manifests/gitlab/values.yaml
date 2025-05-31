@@ -73,17 +73,6 @@ postgresql:
 
 registry:
   enabled: true
-  host: registry.gitlab.example.com
-  port: 443
-  api:
-  storage:
-    backend: filesystem
-    filesystem:
-      rootdirectory: /var/lib/registry
-  persistence:
-    enabled: true
-    size: 50Gi
-    storageClass: standard
 mattermost:
   enabled: false
 pages:
