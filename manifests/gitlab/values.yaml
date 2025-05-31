@@ -27,7 +27,11 @@ global:
   ingress:
     configureCertmanager: true  # Разрешаем cert-manager управлять сертификатами
     enabled: false             # Отключаем встроенный Ingress GitLab
-
+  common:
+    labels:
+      app: gitlab
+      component: webservice
+      
   image: {}
     # Registry value override is only available for the following Charts:
     # - Spamcheck
