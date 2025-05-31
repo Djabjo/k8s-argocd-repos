@@ -25,12 +25,6 @@
 ## The global properties are used to configure multiple charts at once.
 ## https://docs.gitlab.com/charts/charts/globals
 global:
-  application:
-    create: true
-  hosts:
-    domain: k8s.djabjo.ru
-    https: true
-    externalIP: "" 
   ingress:
     configureCertmanager: true  # Разрешаем cert-manager управлять сертификатами
     enabled: false             # Отключаем встроенный Ingress GitLab
@@ -63,15 +57,15 @@ global:
 
   ## https://docs.gitlab.com/charts/charts/globals#application-resource
   application:
-    create: false
+    create: true
     links: []
     allowClusterRoles: true
+    
   ## https://docs.gitlab.com/charts/charts/globals#configure-host-settings
-  hosts:
-    domain:  k8s.djabjo.ru # Замените на ваш домен
-    hostSuffix:
+  hosts: 
+    domain: k8s.djabjo.ru
+    externalIP: "" 
     https: true
-    externalIP:
     ssh:
     gitlab: {}
     minio: {}
@@ -881,8 +875,6 @@ gitlab:
       enabled: false
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-webservice
-  webservice:
-    workerTimeout: 60
 
   ## https://docs.gitlab.com/charts/charts/globals#custom-certificate-authorities
   # configuration of certificates container & custom CA injection
@@ -1023,10 +1015,6 @@ certmanager-issuer:
 ## See requirements.yaml for current version
 installCertmanager: false
 
-  # Предполагаем, что cert-manager уже установлен
-certmanager-issuer:
-  email: vovakotov97@mail.ru # Замените на реальный email
-  server: https://acme-v02.api.letsencrypt.org/directory
 ## Configuration of jetstack/cert-manager
 certmanager:
   installCRDs: false
