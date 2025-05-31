@@ -13,7 +13,7 @@ spec:
   source:
     helm:
       valueFiles:
-        - requirements.yaml
+        - values.yaml
     path: manifests/gitlab
     repoURL: {{ .Values.spec.source.repoURL }}
     targetRevision: {{ .Values.targetRevision }}
