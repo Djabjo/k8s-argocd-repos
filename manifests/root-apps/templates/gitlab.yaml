@@ -11,6 +11,7 @@ spec:
     server: {{ .Values.spec.destination.server }}
   project: gitlab
   source:
+    chart: gitlab
     helm:
       valueFiles:
         - values.yaml
