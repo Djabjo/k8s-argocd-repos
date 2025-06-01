@@ -232,7 +232,7 @@ global:
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-minio-settings
   minio:
-    enabled: true
+    enabled: false
     credentials: {}
       # secret:
 
@@ -668,7 +668,31 @@ global:
       # secret:
       # key:
     tls:
-      enabled: false
+      verify: true
+      caSecretName: registry-tls
+      exporter:
+        enabled: true
+        tls:
+          enabled: true
+
+    ingress:
+      enabled: true
+      apiVersion: "networking.k8s.io/v1"
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+        kubernetes.io/ingress.provider: nginx
+        nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+      ingressClassName: nginx
+      tls:
+        secretName: registry-tls 
+        hosts:
+          - registry.k8s.djabjo.ru  
+      rules:
+        - host: registry.k8s.djabjo.ru
+          http:
+            paths:
+              - path: /
+                pathType: Prefix
       # secretName:
     redis:
       cache:
@@ -958,7 +982,7 @@ certmanager-issuer:
 ## Installation of certmananger.
 ## This value replaces `certmanager.install` to allow certmanager schema validation to pass.
 ## See requirements.yaml for current version
-installCertmanager: true
+installCertmanager: false
 
 ## Configuration of jetstack/cert-manager
 certmanager:
@@ -1292,7 +1316,7 @@ postgresql:
 ## https://docs.gitlab.com/charts/installation/secrets
 ## https://docs.gitlab.com/charts/charts/shared-secrets.html
 shared-secrets:
-  enabled: true
+  enabled: false
   rbac:
     create: true
   selfsign:
@@ -1382,9 +1406,11 @@ gitlab:
   ## https://docs.gitlab.com/charts/charts/gitlab/migrations
   #   migrations:
   #     enabled: false
+
   ## https://docs.gitlab.com/charts/charts/gitlab/webservice
   webservice:
     enabled: true
+    replicaCount: 1
     workhorse: {}
     tls:
       verify: true
@@ -1394,19 +1420,18 @@ gitlab:
         tls:
           enabled: true
 
-    # Добавляем ваш Ingress конфиг:
     ingress:
       enabled: true
       apiVersion: "networking.k8s.io/v1"
       annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-prod
-        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        -manager.certio/cluster-issuer: letsencrypt-prod
+        kubernetes.io/ingress.provider: nginx
+        nginx.ingress.kubernetes.io/ssl-redirect: 'false'
       ingressClassName: nginx
       tls:
-        secretName: gitlab-tls  # Измените на ваш секрет
+        secretName: gitlab-tls 
         hosts:
-          - gitlab.k8s.djabjo.ru  # Ваш домен для GitLab
+          - gitlab.k8s.djabjo.ru  
       rules:
         - host: gitlab.k8s.djabjo.ru
           http:
@@ -1418,8 +1443,8 @@ gitlab:
                   servicePort: 443
 
   ## https://docs.gitlab.com/charts/charts/gitlab/sidekiq
-  #   sidekiq:
-  #     enabled: false
+    sidekiq:
+      enabled: false
   ## https://docs.gitlab.com/charts/charts/gitlab/gitaly
   #   gitaly:
   ## https://docs.gitlab.com/charts/charts/gitlab/gitlab-shell
