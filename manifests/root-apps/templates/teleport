@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: teleport
+  namespace: teleport
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: teleport
+    server: {{ .Values.spec.destination.server }}
+  project: gteleport
+  source:
+    chart: teleport
+    helm:
+      valueFiles:
+        - values.yaml
+    path: manifests/teleport
+    repoURL: {{ .Values.spec.source.repoURL }}
+    targetRevision: {{ .Values.targetRevision }}
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

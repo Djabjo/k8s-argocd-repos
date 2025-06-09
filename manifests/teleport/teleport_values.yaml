@@ -1,0 +1,58 @@
+chartMode: standalone
+clusterName: teleport.k8s.djabjo.ru
+
+ingress:
+  enabled: true
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+  hosts:
+    - host: teleport.k8s.djabjo.ru
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - hosts:
+        - teleport.k8s.djabjo.ru
+      secretName: teleport-tls
+
+auth:
+  teleportConfig:
+    # put any teleport.yaml auth configuration overrides here
+    teleport:
+      log:
+        output: stderr
+        severity: DEBUG
+
+    auth_service:
+      enabled: true
+      web_idle_timeout: 1h
+      authentication:
+        locking_mode: best_effort
+
+proxy:
+  teleportConfig:
+    # put any teleport.yaml proxy configuration overrides here
+    teleport:
+      log:
+        output: stderr
+        severity: DEBUG
+
+    proxy_service:
+      https_keypairs_reload_interval: 12h
+      # optionally override the public addresses for the cluster
+      # public_addr: custom.example.com:443
+      # tunnel_public_addr: custom.example.com:3024
+
+# If you are running Kubernetes 1.23 or above, disable PodSecurityPolicies
+podSecurityPolicy:
+  enabled: false
+
+# OPTIONAL - when using highly-available storage for both backend AND session recordings
+# you can disable disk persistence and replicate auth pods.
+#
+# persistence:
+#   enabled: false
+highAvailability:
+  replicaCount: 1
