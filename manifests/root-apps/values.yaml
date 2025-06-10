@@ -4,4 +4,4 @@ spec:
   source:
     repoURL: https://github.com/Djabjo/k8s-argocd-repos
   project: default
-targetRevision: v1.0.0  # Обязательное поле!
+targetRevision: main # Обязательное поле!

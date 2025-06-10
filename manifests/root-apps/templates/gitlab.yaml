@@ -11,8 +11,7 @@ spec:
     server: {{ .Values.spec.destination.server }}
   project: {{ .Values.spec.project }}
   source:
-    chart: gitlab
-    targetRevision: {{ .Values.targetRevision }} # Обязательное поле!
+    targetRevision: {{ .Values.targetRevision }} 
     helm:
       valueFiles:
         - values.yaml
