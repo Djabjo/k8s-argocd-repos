@@ -693,7 +693,6 @@ global:
             paths:
               - path: /
                 pathType: Prefix
-      # secretName:
     redis:
       cache:
         password: {}
@@ -1424,7 +1423,7 @@ gitlab:
       enabled: true
       apiVersion: "networking.k8s.io/v1"
       annotations:
-        -manager.certio/cluster-issuer: letsencrypt-prod
+        manager.certio/cluster-issuer: letsencrypt-prod
         kubernetes.io/ingress.provider: nginx
         nginx.ingress.kubernetes.io/ssl-redirect: 'false'
       ingressClassName: nginx
