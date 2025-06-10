@@ -12,6 +12,7 @@ spec:
   project: {{ .Values.spec.project }}
   source:
     chart: teleport
+    targetRevision: {{ .Values.targetRevision }} 
     helm:
       valueFiles:
         - values.yaml

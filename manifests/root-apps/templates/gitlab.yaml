@@ -12,6 +12,7 @@ spec:
   project: {{ .Values.spec.project }}
   source:
     chart: gitlab
+    targetRevision: {{ .Values.targetRevision }} # Обязательное поле!
     helm:
       valueFiles:
         - values.yaml
