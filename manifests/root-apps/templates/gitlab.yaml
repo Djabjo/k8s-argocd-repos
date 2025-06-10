@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: gitlab
     server: {{ .Values.spec.destination.server }}
-  project: gitlab
+  project: {{ .Values.spec.project }}
   source:
     chart: gitlab
     helm:

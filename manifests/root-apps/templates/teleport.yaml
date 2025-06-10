@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: teleport
     server: {{ .Values.spec.destination.server }}
-  project: teleport
+  project: {{ .Values.spec.project }}
   source:
     chart: teleport
     helm:
