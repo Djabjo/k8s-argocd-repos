@@ -740,7 +740,7 @@ rbac:
 # You can override the proxy's backend service to any service type (other than "LoadBalancer") here if really needed.
 # To use an Ingress, set service.type=ClusterIP and ingress.enabled=true
 service:
-  type: LoadBalancer
+  type: ClusterIP
   # Additional entries here will be added to the service spec.
   spec: {}
     # loadBalancerIP: "1.2.3.4"
