@@ -351,8 +351,6 @@ global:
       bizible:
 
     ## https://docs.gitlab.com/charts/charts/globals#lfs-artifacts-uploads-packages-external-mr-diffs-and-dependency-proxy
-    object_store:
-      enabled: false
       proxy_download: true
       storage_options: {}
         # server_side_encryption:
