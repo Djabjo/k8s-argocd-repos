@@ -972,6 +972,8 @@ upgradeCheck:
 
 ## Settings for the Let's Encrypt ACME Issuer
 certmanager-issuer:
+  email: vovakotov97@mail.ru  # замените на ваш реальный email
+  server: https://acme-v02.api.letsencrypt.org/directory
   enabled: false
 
 #   # The email address to register certificates requested from Let's Encrypt.
