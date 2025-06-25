@@ -1,9 +1,11 @@
 global:
-  # Application settings
+  # Обязательные настройки
   application:
     create: true
-  
-  # Disable unnecessary components
+  common:
+    labels: {}
+
+  # Отключаем ненужные компоненты
   ingress:
     configureCertmanager: false
     enabled: false
@@ -11,31 +13,28 @@ global:
     enabled: false
   certmanager:
     install: false
-  
-  # PostgreSQL configuration
+
+  # Настройка PostgreSQL
   psql:
     host: ""
     password:
       secret: gitlab-postgres
       key: password
-  
-  # Redis configuration
+
+  # Настройка Redis - упрощаем конфигурацию
   redis:
     password:
       enabled: false
-      secret: gitlab-redis
-      key: password
 
-# Disable ingress
+# Отключаем ingress
 nginx-ingress:
   enabled: false
 
-# Disable cert-manager
-certmanager:
-  install: false
-
-# GitLab configuration
+# Конфигурация GitLab
 gitlab:
+  common:
+    labels: {}
+
   webservice:
     replicas: 1
     resources:
@@ -66,20 +65,19 @@ gitlab:
         cpu: 500m
         memory: 1Gi
 
-# Disable runner and registry
+# Отключаем дополнительные компоненты
 gitlab-runner:
   install: false
 
 registry:
   enabled: false
 
-# Disable monitoring
 prometheus:
   install: false
 grafana:
   install: false
 
-# PostgreSQL configuration (embedded)
+# Встроенный PostgreSQL
 postgresql:
   enabled: true
   image:
@@ -97,7 +95,7 @@ postgresql:
   auth:
     password: ""
 
-# Redis configuration (embedded)
+# Встроенный Redis
 redis:
   enabled: true
   auth:
@@ -109,4 +107,4 @@ redis:
         memory: 256Mi
       limits:
         cpu: 200m
-        memory: 512Mi2Mi
+        memory: 512Mi
