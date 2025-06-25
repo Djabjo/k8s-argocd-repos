@@ -999,23 +999,6 @@ nginx-ingress:
 # Configuration differences compared to the main nginx ingress:
 #   - Pass X-Forwarded-For headers as is
 #   - Use a different IngressClass name
-nginx-ingress-geo:
-  <<: *nginx-ingress
-  enabled: false
-  controller:
-    <<: *nginx-ingress-controller
-    config:
-      <<: *nginx-ingress-controller-config
-      # Pass incoming X-Forwarded-* headers to upstream. Required to handle requests
-      # from other Geo sites.
-      # https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#use-forwarded-headers
-      use-forwarded-headers: true
-    electionID: ingress-controller-leader-geo
-    ingressClassResource:
-      name: '{{ include "gitlab.geo.ingress.class.name" $ | quote }}'
-      controllerValue: 'k8s.io/nginx-ingress-geo'
-  # A pre-defined/static external IP can be configured with global.hosts.externalGeoIP.
-  externalIpTpl: '{{ .Values.global.hosts.externalGeoIP }}'
 
 haproxy:
   install: false
