@@ -1,11 +1,25 @@
 global:
-  # Обязательные настройки
+  # Обязательные базовые настройки
   application:
     create: true
   common:
     labels: {}
+  image:
+    tagSuffix: ""
+  
+  # Настройки базы данных
+  psql:
+    host: ""
+    password:
+      secret: gitlab-postgres
+      key: password
+  
+  # Настройки Redis
+  redis:
+    password:
+      enabled: false
 
-  # Отключаем ненужные компоненты
+  # Отключение ненужных компонентов
   ingress:
     configureCertmanager: false
     enabled: false
@@ -14,23 +28,7 @@ global:
   certmanager:
     install: false
 
-  # Настройка PostgreSQL
-  psql:
-    host: ""
-    password:
-      secret: gitlab-postgres
-      key: password
-
-  # Настройка Redis - упрощаем конфигурацию
-  redis:
-    password:
-      enabled: false
-
-# Отключаем ingress
-nginx-ingress:
-  enabled: false
-
-# Конфигурация GitLab
+# Настройки GitLab
 gitlab:
   common:
     labels: {}
@@ -44,7 +42,9 @@ gitlab:
       limits:
         cpu: 1
         memory: 2Gi
-
+    image:
+      tag: ""
+  
   sidekiq:
     replicas: 1
     resources:
@@ -54,7 +54,7 @@ gitlab:
       limits:
         cpu: 1
         memory: 2Gi
-
+  
   gitlab-shell:
     replicas: 1
     resources:
@@ -65,7 +65,7 @@ gitlab:
         cpu: 500m
         memory: 1Gi
 
-# Отключаем дополнительные компоненты
+# Отключение дополнительных компонентов
 gitlab-runner:
   install: false
 
@@ -77,7 +77,7 @@ prometheus:
 grafana:
   install: false
 
-# Встроенный PostgreSQL
+# Встроенная PostgreSQL
 postgresql:
   enabled: true
   image:
