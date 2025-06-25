@@ -763,6 +763,37 @@ global:
     registrationToken: {}
       # secret:
 
+  ## https://docs.gitlab.com/charts/charts/globals#outgoing-email
+  ## Outgoing email server settings
+  smtp:
+    enabled: false
+    address: smtp.mailgun.org
+    port: 2525
+    user_name: ""
+    ## https://docs.gitlab.com/charts/installation/secrets#smtp-password
+    password:
+      secret: ""
+      key: password
+    # domain:
+    authentication: "plain"
+    starttls_auto: false
+    openssl_verify_mode: "peer"
+    open_timeout: 30
+    read_timeout: 60
+    pool: false
+
+  ## https://docs.gitlab.com/charts/charts/globals#outgoing-email
+  ## Email persona used in email sent by GitLab
+  email:
+    from: ""
+    display_name: GitLab
+    reply_to: ""
+    subject_suffix: ""
+    smime:
+      enabled: false
+      secretName: ""
+      keyName: "tls.key"
+      certName: "tls.crt"
 
   ## Timezone for containers.
   time_zone: UTC
