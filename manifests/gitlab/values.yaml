@@ -232,13 +232,15 @@ global:
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-minio-settings
   minio:
-    enabled: true
+    enabled: false
     credentials: {}
       # secret:
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-appconfig-settings
   ## Rails based portions of this chart share many settings
   appConfig:
+    object_store:
+        enabled: false
     ## https://docs.gitlab.com/charts/charts/globals#general-application-settings
     # cdnHost:
     enableUsagePing: true
@@ -970,8 +972,7 @@ upgradeCheck:
 
 ## Settings for the Let's Encrypt ACME Issuer
 certmanager-issuer:
-  email: vovakotov97@mail.ru # Замените на реальный email
-  server: https://acme-v02.api.letsencrypt.org/directory
+  enabled: false
 
 #   # The email address to register certificates requested from Let's Encrypt.
 #   # Required if using Let's Encrypt.
