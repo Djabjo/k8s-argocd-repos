@@ -1,5 +1,5 @@
 global:
-  # Обязательные базовые настройки
+  # Обязательные настройки для GitLab
   application:
     create: true
   common:
@@ -7,14 +7,19 @@ global:
   image:
     tagSuffix: ""
   
-  # Настройки базы данных
+  # Настройки начального пароля администратора
+  initialRootPassword:
+    secret: gitlab-initial-root-password
+    key: password
+  
+  # Настройки PostgreSQL
   psql:
     host: ""
     password:
       secret: gitlab-postgres
       key: password
   
-  # Настройки Redis
+  # Упрощенная настройка Redis
   redis:
     password:
       enabled: false
@@ -27,12 +32,16 @@ global:
     enabled: false
   certmanager:
     install: false
+    installCRDs: false
 
 # Настройки GitLab
 gitlab:
   common:
     labels: {}
 
+  # Настройка пароля администратора
+  initialRootPassword: {}
+  
   webservice:
     replicas: 1
     resources:
@@ -42,8 +51,7 @@ gitlab:
       limits:
         cpu: 1
         memory: 2Gi
-    image:
-      tag: ""
+    image: {}
   
   sidekiq:
     replicas: 1
