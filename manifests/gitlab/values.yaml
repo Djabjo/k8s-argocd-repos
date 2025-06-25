@@ -1,3 +1,7 @@
+global:
+  application:
+    create: true
+    
 gitlab:
   gitlabRootPassword: "12345Got"
   webservice:
