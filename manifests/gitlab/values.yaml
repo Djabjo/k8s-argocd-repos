@@ -163,9 +163,8 @@ global:
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-redis-settings
   redis:
-    enabled: false
     auth:
-      enabled: false
+      enabled: true
       # secret:
       # key:
     # connectTimeout: 1
