@@ -239,8 +239,6 @@ global:
   ## https://docs.gitlab.com/charts/charts/globals#configure-appconfig-settings
   ## Rails based portions of this chart share many settings
   appConfig:
-    object_store:
-        enabled: false
     ## https://docs.gitlab.com/charts/charts/globals#general-application-settings
     # cdnHost:
     enableUsagePing: true
@@ -351,6 +349,8 @@ global:
       bizible:
 
     ## https://docs.gitlab.com/charts/charts/globals#lfs-artifacts-uploads-packages-external-mr-diffs-and-dependency-proxy
+    object_store:
+      enabled: false
       proxy_download: true
       storage_options: {}
         # server_side_encryption:
