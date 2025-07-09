@@ -8,7 +8,8 @@ global:
     labels: {}
   
   service:
-    labels: {}  # Добавляем пустые labels для сервиса
+    labels: {}
+    annotations: {}  # Добавляем пустые annotations для сервиса
   
   image:
     tagSuffix: ""
@@ -53,8 +54,11 @@ global:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
 
-# Остальная конфигурация остается без изменений...
-# [Вставьте сюда остальные секции из предыдущего конфига]
+certmanager:
+  install: false
+
+nginx-ingress:
+  enabled: false
 
 gitlab:
   webservice:
@@ -77,16 +81,6 @@ gitlab:
         memory: 3Gi
         cpu: 1
 
-# Отключаем cert-manager (используем предустановленный)
-certmanager:
-  install: false
-
-# Отключаем встроенный ingress-nginx
-nginx-ingress:
-  enabled: false
-
-
-  # Sidekiq
   sidekiq:
     enabled: true
     replicaCount: 1
@@ -98,25 +92,21 @@ nginx-ingress:
         memory: 2Gi
         cpu: 500m
 
-  # Toolbox
   toolbox:
     enabled: true
     persistence:
       enabled: false
 
-  # Gitaly
   gitaly:
     enabled: true
     persistence:
       enabled: true
       size: 10Gi
 
-  # GitLab Shell
   gitlab-shell:
     enabled: true
     replicaCount: 1
 
-  # Registry
   registry:
     enabled: true
     ingress:
@@ -137,7 +127,6 @@ nginx-ingress:
       enabled: true
       size: 50Gi
 
-# База данных PostgreSQL
 postgresql:
   enabled: true
   persistence:
@@ -148,7 +137,6 @@ postgresql:
       memory: 1Gi
       cpu: 500m
 
-# Redis
 redis:
   enabled: true
   master:
@@ -160,7 +148,6 @@ redis:
       memory: 1Gi
       cpu: 500m
 
-# Отключаем ненужные компоненты
 prometheus:
   install: false
 
