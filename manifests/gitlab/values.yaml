@@ -1,4 +1,5 @@
 global:
+  apiVersion: v1
   # Обязательные базовые настройки
   application:
     create: true
