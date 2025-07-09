@@ -9,7 +9,11 @@ global:
   
   service:
     labels: {}
-    annotations: {}  # Добавляем пустые annotations для сервиса
+    annotations: {}
+  
+  workhorse:
+    tls:
+      enabled: false 
   
   image:
     tagSuffix: ""
