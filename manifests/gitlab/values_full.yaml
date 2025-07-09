@@ -51,7 +51,7 @@ global:
   edition: ee
 
   ## https://docs.gitlab.com/charts/charts/globals#gitlab-version
-  gitlabVersion: "18.0.1"
+  gitlabVersion: "18.1.0"
 
   ## https://docs.gitlab.com/charts/charts/globals#application-resource
   application:
@@ -60,10 +60,10 @@ global:
     allowClusterRoles: true
   ## https://docs.gitlab.com/charts/charts/globals#configure-host-settings
   hosts:
-    domain: gitlab.k8s.djabjo.ru
+    domain: example.com
     hostSuffix:
     https: true
-    externalIP:  ""
+    externalIP:
     ssh:
     gitlab: {}
     minio: {}
@@ -72,6 +72,7 @@ global:
     smartcard: {}
     kas: {}
     pages: {}
+    openbao: {}
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-ingress-settings
   ingress:
@@ -81,7 +82,7 @@ global:
     provider: nginx
     # class:
     annotations: {}
-    enabled: false
+    enabled: true
     tls: {}
     #   enabled: true
     #   secretName:
@@ -668,31 +669,8 @@ global:
       # secret:
       # key:
     tls:
-      verify: true
-      caSecretName: registry-tls
-      exporter:
-        enabled: true
-        tls:
-          enabled: true
-
-    ingress:
-      enabled: true
-      apiVersion: "networking.k8s.io/v1"
-      annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-prod
-        kubernetes.io/ingress.provider: nginx
-        nginx.ingress.kubernetes.io/ssl-redirect: 'false'
-      ingressClassName: nginx
-      tls:
-        secretName: registry-tls 
-        hosts:
-          - registry.k8s.djabjo.ru  
-      rules:
-        - host: registry.k8s.djabjo.ru
-          http:
-            paths:
-              - path: /
-                pathType: Prefix
+      enabled: false
+      # secretName:
     redis:
       cache:
         password: {}
@@ -737,6 +715,7 @@ global:
     https: # default true
     externalHttp: []
     externalHttps: []
+    customDomainMode:
     artifactsServer: true
     localStore:
       enabled: false
@@ -906,6 +885,14 @@ global:
     indexer:
       internalApi: {}
 
+  ## https://docs.gitlab.com/ci/secrets/
+  ## Experimental, unsupported
+  openbao:
+    enabled: false
+    host:
+    https:
+    url: # If present, must be a complete URI
+
   ## https://docs.gitlab.com/charts/charts/globals
   extraEnv: {}
   #   SOME_KEY: some_value
@@ -941,7 +928,7 @@ global:
 ## End of global
 
 upgradeCheck:
-  enabled: false
+  enabled: true
   image: {}
     # repository:
     # tag:
@@ -969,10 +956,7 @@ upgradeCheck:
   priorityClassName: ""
 
 ## Settings for the Let's Encrypt ACME Issuer
-certmanager-issuer:
-  email: vovakotov97@mail.ru # Замените на реальный email
-  server: https://acme-v02.api.letsencrypt.org/directory
-
+# certmanager-issuer:
 #   # The email address to register certificates requested from Let's Encrypt.
 #   # Required if using Let's Encrypt.
 #   email: email@example.com
@@ -980,12 +964,12 @@ certmanager-issuer:
 
 ## Installation of certmananger.
 ## This value replaces `certmanager.install` to allow certmanager schema validation to pass.
-## See requirements.yaml for current version
-installCertmanager: false
+## See dependencies in Chart.yaml for current version
+installCertmanager: true
 
 ## Configuration of jetstack/cert-manager
 certmanager:
-  installCRDs: false
+  installCRDs: true
   nameOverride: certmanager
   # Other cert-manager configurations from upstream
   # See https://github.com/jetstack/cert-manager/blob/master/deploy/charts/cert-manager/README#configuration
@@ -996,7 +980,7 @@ certmanager:
 ## https://docs.gitlab.com/charts/architecture/decisions#nginx-ingress
 ## Installation & configuration of charts/ingress-nginx:
 nginx-ingress: &nginx-ingress
-  enabled: false
+  enabled: true
   tcpExternalConfig: "true"
   controller: &nginx-ingress-controller
     addHeaders:
@@ -1091,9 +1075,9 @@ haproxy:
       - --configmap-tcp-services=$(POD_NAMESPACE)/$(POD_NAMESPACE)-haproxy-tcp
 
 ## Installation & configuration of stable/prometheus
-## See requirements.yaml for current version
+## See dependencies in Chart.yaml for current version
 prometheus:
-  install: false
+  install: true
   rbac:
     create: true
   alertmanager:
@@ -1268,7 +1252,7 @@ redis:
     enabled: true
 
 ## Installation & configuration of stable/postgresql
-## See requirements.yaml for current version
+## See dependencies in Chart.yaml for current version
 postgresql:
   install: true
   auth:
@@ -1315,7 +1299,7 @@ postgresql:
 ## https://docs.gitlab.com/charts/installation/secrets
 ## https://docs.gitlab.com/charts/charts/shared-secrets.html
 shared-secrets:
-  enabled: false
+  enabled: true
   rbac:
     create: true
   selfsign:
@@ -1353,7 +1337,7 @@ shared-secrets:
   annotations: {}
 
 ## Installation & configuration of gitlab/gitlab-runner
-## See requirements.yaml for current version
+## See dependencies in Chart.yaml for current version
 gitlab-runner:
   install: true
   rbac:
@@ -1405,45 +1389,12 @@ gitlab:
   ## https://docs.gitlab.com/charts/charts/gitlab/migrations
   #   migrations:
   #     enabled: false
-
   ## https://docs.gitlab.com/charts/charts/gitlab/webservice
-  webservice:
-    enabled: true
-    replicaCount: 1
-    workhorse: {}
-    tls:
-      verify: true
-      caSecretName: gitlab-tls
-      exporter:
-        enabled: true
-        tls:
-          enabled: true
-
-    ingress:
-      enabled: true
-      apiVersion: "networking.k8s.io/v1"
-      annotations:
-        manager.certio/cluster-issuer: letsencrypt-prod
-        kubernetes.io/ingress.provider: nginx
-        nginx.ingress.kubernetes.io/ssl-redirect: 'false'
-      ingressClassName: nginx
-      tls:
-        secretName: gitlab-tls 
-        hosts:
-          - gitlab.k8s.djabjo.ru  
-      rules:
-        - host: gitlab.k8s.djabjo.ru
-          http:
-            paths:
-              - path: /
-                pathType: Prefix
-                backend:
-                  serviceName: gitlab-webservice-default
-                  servicePort: 443
-
+  #   webservice:
+  #     enabled: false
   ## https://docs.gitlab.com/charts/charts/gitlab/sidekiq
-    sidekiq:
-      enabled: false
+  #   sidekiq:
+  #     enabled: false
   ## https://docs.gitlab.com/charts/charts/gitlab/gitaly
   #   gitaly:
   ## https://docs.gitlab.com/charts/charts/gitlab/gitlab-shell
@@ -1468,4 +1419,3 @@ gitlab-zoekt:
       enabled: true
       secretName: '{{ include "gitlab.zoekt.indexer.internalApi.secretName" $ }}'
       secretKey: '{{ include "gitlab.zoekt.indexer.internalApi.secretKey" $ }}'
-      gitlabUrl: '{{ include "gitlab.zoekt.indexer.internalApi.gitlabUrl" $ }}'

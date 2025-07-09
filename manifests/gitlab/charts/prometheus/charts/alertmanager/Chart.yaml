@@ -23,4 +23,4 @@ name: alertmanager
 sources:
 - https://github.com/prometheus/alertmanager
 type: application
-version: 1.16.2
+version: 1.20.1

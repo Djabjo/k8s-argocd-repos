@@ -108,11 +108,11 @@ spec:
               name: webserver
           livenessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: {{ .Values.webserver.listen.port }}
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: {{ .Values.webserver.listen.port }}
           resources:
             {{- toYaml (merge .Values.webserver.resources .Values.resources) | nindent 12 }}

@@ -45,8 +45,32 @@ helm install gitlab-zoekt . -f custom-values.yaml
 lefthook install
 ```
 
+## Architecture
+
+The GitLab Zoekt Helm chart deploys a code search engine with a modern, scalable architecture.
+
+### Key Components
+
+1. **StatefulSet Pod** containing:
+   - **Indexer**: Creates and maintains search indices from Git repositories
+   - **Webserver**: Serves search queries against the indexed data
+   - **Internal Gateway**: Routes requests between indexer and webserver within the pod
+
+2. **External Gateway (Deployment)**:
+   - Routes external traffic to the StatefulSet pods
+   - Provides direct node addressing via `/nodes/[node-name]/[path]`
+   - Enables federated search capabilities
+
+The architecture features:
+- Federated search with gRPC streaming for efficient multi-node searches
+- Self-registering node system for easy scaling
+- Configurable security with TLS and basic authentication
+
+[Read the detailed architecture documentation](doc/architecture.md)
+
 ## Detailed documentation
 
+- [Architecture Overview](doc/architecture.md)
 - [How to enable LoadBalancer](doc/load_balancer.md)
 
 ## Decision Making

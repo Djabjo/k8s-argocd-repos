@@ -52,7 +52,7 @@ gateway:
     enabled: false
     secretName: '' # Defaults to {{ .Release.Name }}-basicauth and it must be created outside this chart
   dnsResolver: 'kube-dns.kube-system.svc.cluster.local'
-  http2: false # Whether to enable HTTP/2 support in nginx
+  http2: true # Whether to enable HTTP/2 support in nginx
   tls:
     certificate:
       enabled: false # Whether to use TLS for the gateway
