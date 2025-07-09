@@ -8,7 +8,12 @@ global:
     labels: {}
   
   image:
-    tagSuffix: ""  # Добавляем пустой tagSuffix
+    tagSuffix: ""
+  
+  # Пароль root (обязательный параметр)
+  initialRootPassword:
+    secret: gitlab-initial-root-password
+    key: password
   
   # Настройки хостов
   hosts:
