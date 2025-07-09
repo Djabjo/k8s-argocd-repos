@@ -1,7 +1,9 @@
 global:
+  application:
+    create: true  
   hosts:
     domain: k8s.djabjo.ru
-    externalIP: ""  # Автоматическое определение
+    externalIP: ""  
     https: true
     ingress:
       configureCertmanager: true
@@ -19,9 +21,10 @@ global:
       secretName: gitlab-tls
     annotations:
       kubernetes.io/ingress.class: nginx
-      cert-manager.io/cluster-issuer: letsencrypt-prod  # Убедитесь, что у вас есть такой issuer
+      cert-manager.io/cluster-issuer: letsencrypt-prod
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
 
 certmanager:
   install: false
