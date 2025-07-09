@@ -10,17 +10,14 @@ global:
   image:
     tagSuffix: ""
   
-  # Настройки ServiceAccount
   serviceAccount:
     enabled: true
     create: true
   
-  # Пароль root
   initialRootPassword:
     secret: gitlab-initial-root-password
     key: password
   
-  # Настройки хостов
   hosts:
     domain: k8s.djabjo.ru
     externalIP: ""
@@ -41,7 +38,6 @@ global:
         enabled: true
         secretName: gitlab-tls
 
-  # Настройки ingress
   ingress:
     enabled: true
     configureCertmanager: true
@@ -54,6 +50,27 @@ global:
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
 
+gitlab:
+  webservice:
+    enabled: true
+    replicaCount: 1
+    ingress:
+      enabled: true
+      path: /
+      pathType: Prefix
+      tls:
+        enabled: true
+        secretName: gitlab-tls
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    resources:
+      requests:
+        memory: 2Gi
+        cpu: 500m
+      limits:
+        memory: 3Gi
+        cpu: 1
+
 # Отключаем cert-manager (используем предустановленный)
 certmanager:
   install: false
@@ -62,24 +79,6 @@ certmanager:
 nginx-ingress:
   enabled: false
 
-# Настройки GitLab
-gitlab:
-  # Webservice
-  webservice:
-    enabled: true
-    replicaCount: 1
-    ingress:
-      enabled: true
-      tls:
-        enabled: true
-        secretName: gitlab-tls
-    resources:
-      requests:
-        memory: 2Gi
-        cpu: 500m
-      limits:
-        memory: 3Gi
-        cpu: 1
 
   # Sidekiq
   sidekiq:
