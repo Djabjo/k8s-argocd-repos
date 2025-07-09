@@ -10,7 +10,12 @@ global:
   image:
     tagSuffix: ""
   
-  # Пароль root (обязательный параметр)
+  # Настройки ServiceAccount
+  serviceAccount:
+    enabled: true
+    create: true
+  
+  # Пароль root
   initialRootPassword:
     secret: gitlab-initial-root-password
     key: password
