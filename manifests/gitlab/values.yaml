@@ -7,6 +7,9 @@ global:
   common:
     labels: {}
   
+  service:
+    labels: {}  # Добавляем пустые labels для сервиса
+  
   image:
     tagSuffix: ""
   
@@ -49,6 +52,9 @@ global:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
       nginx.ingress.kubernetes.io/proxy-body-size: "0"
+
+# Остальная конфигурация остается без изменений...
+# [Вставьте сюда остальные секции из предыдущего конфига]
 
 gitlab:
   webservice:
