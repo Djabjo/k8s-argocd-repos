@@ -43,3 +43,35 @@ and see the [changelog](CHANGELOG.md) for the full details on any release.
 
 See the [contribution guidelines](CONTRIBUTING.md) and then check out the
 [development styleguide](doc/development/_index.md).
+
+
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitlab-gitlab-shell
+  namespace: gitlab
+spec:
+  type: LoadBalancer
+  externalIPs:
+    - 192.168.0.101  # IP вашей ноды
+  ports:
+    - name: ssh
+      protocol: TCP
+      port: 22
+      targetPort: 2222
+  selector:
+    app: gitlab-shell
+    release: gitlab
+
+
+Настройка ssh до gitlab 
+
+
+
+vault write auth/oidc/role/default \
+    user_claim="sub" \              
+    groups_claim="groups" \ 
+    allowed_redirect_uris="https://vault.k8s.djabjo.ru/ui/vault/auth/oidc/oidc/callback" \
+    bound_audiences="1f5e32e1187b79303b893e8230da01e0a8700b1b21384cec3dfc3804581bcf06" 
