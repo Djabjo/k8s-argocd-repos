@@ -711,7 +711,7 @@ global:
       protocol: http
       serviceName: registry
       port: 5000
-    tokenIssuer: gitlab-issuer
+    tokenIssuer:
 
   pages:
     enabled: false
