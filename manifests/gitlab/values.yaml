@@ -243,6 +243,17 @@ global:
       # secret:
     persistence:
       storageClass: null
+    nodeSelector:
+      kubernetes.io/hostname: worker2
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+              - worker2
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-appconfig-settings
   ## Rails based portions of this chart share many settings
