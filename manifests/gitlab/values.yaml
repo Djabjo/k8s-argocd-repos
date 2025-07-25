@@ -668,7 +668,7 @@ global:
   ## https://docs.gitlab.com/charts/charts/globals#configure-registry-settings
   registry:
     bucket: registry
-    tokenIssuer: gitlab-issuer
+
     certificate: {}
       # secret:
     httpSecret: {}
@@ -713,7 +713,7 @@ global:
       protocol: http
       serviceName: registry
       port: 5000
-    #tokenIssuer: gitlab-issuer
+    tokenIssuer: gitlab-issuer
 
   pages:
     enabled: false
