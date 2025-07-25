@@ -81,6 +81,7 @@ global:
     useNewIngressForCerts: false
     provider: nginx
     # class:
+    ngressClassName: nginx
     annotations:
       cert-manager.io/cluster-issuer: "letsencrypt-prod"
     enabled: true
