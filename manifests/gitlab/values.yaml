@@ -80,14 +80,16 @@ global:
     configureCertmanager: true
     useNewIngressForCerts: false
     provider: nginx
-    class: nginx
+    # class:
     annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-      kubernetes.io/ingress.class: nginx
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      kubernetes.io/ingress.class: "nginx"
     enabled: true
     tls:
       enabled: true
       secretName: gitlab-tls
+    #   enabled: true
+    #   secretName:
     path: /
     pathType: Prefix
 
@@ -191,7 +193,8 @@ global:
     authToken: {}
       # secret:
       # key:
-    # serviceName:
+    persistence:
+      storageClass: local-hdd
     internal:
       names: [default]
     external: []
@@ -238,6 +241,8 @@ global:
     enabled: true
     credentials: {}
       # secret:
+    persistence:
+      storageClass: local-hdd
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-appconfig-settings
   ## Rails based portions of this chart share many settings
@@ -788,8 +793,6 @@ global:
   deployment:
     annotations: {}
 
-  nodeSelector:
-    kubernetes.io/hostname: worker2
 
   # Setting a global nodeAffinity only applies to the registry chart for now.
   # See issue https://gitlab.com/gitlab-com/gl-infra/production-engineering/-/issues/25403 for more information
@@ -960,16 +963,13 @@ upgradeCheck:
   priorityClassName: ""
 
 ## Settings for the Let's Encrypt ACME Issuer
-# certmanager-issuer:
-#   # The email address to register certificates requested from Let's Encrypt.
-#   # Required if using Let's Encrypt.
-#   email: email@example.com
-
+certmanager-issuer:
+  email: vovakotov97@mail.ru
 
 ## Installation of certmananger.
 ## This value replaces `certmanager.install` to allow certmanager schema validation to pass.
 ## See dependencies in Chart.yaml for current version
-installCertmanager: false
+installCertmanager: true
 
 ## Configuration of jetstack/cert-manager
 certmanager:
@@ -1096,6 +1096,8 @@ prometheus:
     retention: 15d
     strategy:
       type: Recreate
+    persistentVolume:
+      storageClass: local-hdd
     containerSecurityContext:
       runAsUser: 1000
       allowPrivilegeEscalation: false
@@ -1249,6 +1251,9 @@ redis:
     existingSecret: gitlab-redis-secret
     existingSecretKey: redis-password
     usePasswordFiles: true
+  master:
+    persistence:
+      storageClass: local-hdd
   architecture: standalone
   cluster:
     enabled: false
@@ -1281,6 +1286,8 @@ postgresql:
         subPath: init_revision.sh
     podAnnotations:
       postgresql.gitlab/init-revision: "1"
+    persistence:
+      storageClass: local-hdd
   metrics:
     enabled: true
     service:
@@ -1380,46 +1387,3 @@ traefik:
       expose: true
       port: 2222
       exposedPort: 22
-
-## Settings for individual sub-charts under GitLab
-## Note: Many of these settings are configurable via globals
-gitlab:
-  ## https://docs.gitlab.com/charts/charts/gitlab/toolbox
-  toolbox:
-    replicas: 1
-    antiAffinityLabels:
-      matchLabels:
-        app: gitaly
-  ## https://docs.gitlab.com/charts/charts/gitlab/migrations
-  #   migrations:
-  #     enabled: false
-  ## https://docs.gitlab.com/charts/charts/gitlab/webservice
-  #   webservice:
-  #     enabled: false
-  ## https://docs.gitlab.com/charts/charts/gitlab/sidekiq
-  #   sidekiq:
-  #     enabled: false
-  ## https://docs.gitlab.com/charts/charts/gitlab/gitaly
-  #   gitaly:
-  ## https://docs.gitlab.com/charts/charts/gitlab/gitlab-shell
-  #   gitlab-shell:
-  #     enabled: false
-  ## https://docs.gitlab.com/charts/charts/gitlab/gitlab-pages
-  #   gitlab-pages:
-  ## https://docs.gitlab.com/charts/charts/gitlab/kas
-  #   kas:
-  ## https://docs.gitlab.com/charts/charts/gitlab/praefect
-  #   praefect:
-
-## Installation & configuration of gitlab/gitlab-zoekt
-gitlab-zoekt:
-  install: false
-  gateway:
-    basicAuth:
-      enabled: true
-      secretName: '{{ include "gitlab.zoekt.gateway.basicAuth.secretName" $ }}'
-  indexer:
-    internalApi:
-      enabled: true
-      secretName: '{{ include "gitlab.zoekt.indexer.internalApi.secretName" $ }}'
-      secretKey: '{{ include "gitlab.zoekt.indexer.internalApi.secretKey" $ }}'
