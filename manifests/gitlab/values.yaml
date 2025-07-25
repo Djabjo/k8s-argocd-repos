@@ -193,7 +193,7 @@ global:
       # secret:
       # key:
     persistence:
-      storageClass: local-hdd
+      storageClass: null
     internal:
       names: [default]
     external: []
@@ -208,17 +208,6 @@ global:
     tls:
       enabled: false
       # secretName:
-    nodeSelector:
-      kubernetes.io/hostname: worker2
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-              - worker2
 
   praefect:
     enabled: false
@@ -252,18 +241,7 @@ global:
     credentials: {}
       # secret:
     persistence:
-      storageClass: local-hdd
-    nodeSelector:
-      kubernetes.io/hostname: worker2
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-              - worker2
+      storageClass: null
 
   ## https://docs.gitlab.com/charts/charts/globals#configure-appconfig-settings
   ## Rails based portions of this chart share many settings
@@ -601,17 +579,6 @@ global:
 
     sidekiq:
       routingRules: []
-      nodeSelector:
-        kubernetes.io/hostname: worker2
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: kubernetes.io/hostname
-                operator: In
-                values:
-                - worker2
 
     # Config that only applies to the defaults on initial install
     initialDefaults: {}
@@ -858,17 +825,6 @@ global:
   ## https://docs.gitlab.com/charts/charts/globals#configure-webservice
   webservice:
     workerTimeout: 60
-    nodeSelector:
-      kubernetes.io/hostname: worker2
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-              - worker2
 
   ## https://docs.gitlab.com/charts/charts/globals#custom-certificate-authorities
   # configuration of certificates container & custom CA injection
@@ -1140,7 +1096,7 @@ prometheus:
     strategy:
       type: Recreate
     persistentVolume:
-      storageClass: local-hdd
+      storageClass: null
     nodeSelector:
       kubernetes.io/hostname: worker2
     affinity:
@@ -1307,7 +1263,7 @@ redis:
     usePasswordFiles: true
   master:
     persistence:
-      storageClass: local-hdd
+      storageClass: null
     nodeSelector:
       kubernetes.io/hostname: worker2
     affinity:
@@ -1349,7 +1305,7 @@ postgresql:
     podAnnotations:
       postgresql.gitlab/init-revision: "1"
     persistence:
-      storageClass: local-hdd
+      storageClass: null
     nodeSelector:
       kubernetes.io/hostname: worker2
     affinity:
