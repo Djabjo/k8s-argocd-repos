@@ -798,8 +798,7 @@ global:
   # See issue https://gitlab.com/gitlab-com/gl-infra/production-engineering/-/issues/25403 for more information
 
   nodeAffinity:
-
-  antiAffinity: soft
+    kubernetes.io/hostname: worker2
   affinity:
     podAntiAffinity:
       topologyKey: "kubernetes.io/hostname"
@@ -1099,6 +1098,17 @@ prometheus:
       type: Recreate
     persistentVolume:
       storageClass: local-hdd
+    nodeSelector:
+      kubernetes.io/hostname: worker2
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+              - worker2
     containerSecurityContext:
       runAsUser: 1000
       allowPrivilegeEscalation: false
@@ -1255,11 +1265,19 @@ redis:
   master:
     persistence:
       storageClass: local-hdd
-  architecture: standalone
-  cluster:
-    enabled: false
-  metrics:
-    enabled: true
+    nodeSelector:
+      kubernetes.io/hostname: worker2
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+              - worker2
+    metrics:
+      enabled: true
 
 ## Installation & configuration of stable/postgresql
 ## See dependencies in Chart.yaml for current version
@@ -1289,14 +1307,25 @@ postgresql:
       postgresql.gitlab/init-revision: "1"
     persistence:
       storageClass: local-hdd
-  metrics:
-    enabled: true
-    service:
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9187"
-        gitlab.com/prometheus_scrape: "true"
-        gitlab.com/prometheus_port: "9187"
+    nodeSelector:
+      kubernetes.io/hostname: worker2
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+              - worker2
+    metrics:
+      enabled: true
+      service:
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "9187"
+          gitlab.com/prometheus_scrape: "true"
+          gitlab.com/prometheus_port: "9187"
 
     ## Optionally define additional custom metrics
     ## ref: https://github.com/wrouesnel/postgres_exporter#adding-new-metrics-via-a-config-file
